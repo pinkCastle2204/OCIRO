@@ -6,8 +6,10 @@ LDFLAGS = $(shell pkg-config --libs opencv4)
 
 SRC = main.cpp
 
+link = src/morphology.cpp	
+
 all:
-	$(CXX) $(SRC) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) $(SRC) $(link) -o $(TARGET) $(CXXFLAGS) $(LDFLAGS)
 
 run: all
 	./$(TARGET)
@@ -15,4 +17,18 @@ run: all
 clean:
 	rm -f $(TARGET)
 
-.PHONY: all run clean
+.PHONY: build
+build:
+ifndef SRC
+	$(error "SRC is not set")
+endif
+ifndef link
+	$(error "link is not set")
+endif
+	@echo "Building..."
+	@$(CC) $(SRC) $(link) -o $(PROJECT) $(CFLAGS) $(LIBS)
+
+.PHONY: clean
+clean:
+	@echo "Cleaning"
+	@rm -rf $(PROJECT)
