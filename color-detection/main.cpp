@@ -6,6 +6,10 @@
 #include <opencv2/imgproc.hpp>
 #include "include/morphology.hpp"
 
+#define scr_width 640
+#define scr_height 480
+
+
 
 int main (){
     cv::VideoCapture video(0, cv::CAP_V4L2);   //Getting input from camera
@@ -17,19 +21,20 @@ int main (){
     int hmin = 0, smin = 75, vmin = 0;
     int hmax = 5, smax = 255, vmax = 255;
 
+    int threshArea = 250;
 
 
 
     //Create a window
     cv::namedWindow("OCIRO", cv::WINDOW_NORMAL);
-    cv::resizeWindow("OCIRO", 800,600);
+    cv::resizeWindow("OCIRO", scr_width,480);
 
 
     cv::namedWindow("DEBUG", cv::WINDOW_NORMAL);
-    cv::resizeWindow("DEBUG", 866, 600);
+    cv::resizeWindow("DEBUG", 866, 480);
     
     cv::namedWindow("FinalColor",cv::WINDOW_NORMAL);
-    cv::resizeWindow("FinalColor",800,600);
+    cv::resizeWindow("FinalColor",scr_width,480);
 
     //sliders
     cv::namedWindow("Sliders",cv::WINDOW_GUI_NORMAL);
@@ -40,6 +45,7 @@ int main (){
     cv::createTrackbar("Saturation Max", "Sliders",&smax,255);
     cv::createTrackbar("Value Min", "Sliders",&vmin,255);
     cv::createTrackbar("Value Max", "Sliders",&vmax,255);
+    cv::createTrackbar("Area Threshold", "Sliders",&threshArea,1000);
    /*
     cv::createTrackbar("Hue Min", "DEBUG",&hmin,179);
     cv::createTrackbar("Hue Max", "DEBUG",&hmax,179);
@@ -49,7 +55,7 @@ int main (){
     cv::createTrackbar("Value Max", "DEBUG",&vmax,255);
     */
     cv::namedWindow("Morphologytest",cv::WINDOW_NORMAL);
-    cv::resizeWindow("Morphologytest",800,600);
+    cv::resizeWindow("Morphologytest",scr_width,480);
     
     while (video.isOpened()){
        
@@ -89,9 +95,9 @@ int main (){
             for(size_t i = 0; i < contours.size(); i++){
                 double area = cv::contourArea(contours[i]);
 
-                if(area >250){
-                    cv::drawContours(ColoredObj, contours, -1, cv::Scalar(0,255,0),2);
-                    cv::drawContours(matDebug, contours, -1, cv::Scalar(0,255,0),2);
+                if(area > threshArea){
+                    cv::drawContours(ColoredObj, contours, i, cv::Scalar(0,255,0),2);
+                    cv::drawContours(matDebug, contours, i, cv::Scalar(0,255,0),2);
                 }       
 
  
